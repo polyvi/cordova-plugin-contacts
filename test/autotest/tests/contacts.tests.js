@@ -70,10 +70,14 @@ describe("Contacts (navigator.contacts)", function () {
             var obj = new ContactFindOptions();
             obj.filter="";
             obj.multiple=true;
-
-            expect(function () {
-                navigator.contacts.find(["displayName", "name", "emails", "phoneNumbers"], null, fail, obj);
-            }).toThrow();
+            runs(function() {
+                try {
+                    navigator.contacts.find(["displayName", "name", "emails", "phoneNumbers"], null, fail, obj);
+                }
+                catch (e) {
+                    expect(e.name == "TypeError").toBe(true);
+                }
+            });
         });
 
         it("contacts.spec.5 error callback should be called when no fields are specified", function() {
@@ -163,7 +167,7 @@ describe("Contacts (navigator.contacts)", function () {
 
     describe('create method', function() {
 
-        it("contacts.spec.1 should exist", function() {
+        it("contacts.spec.7 should exist", function() {
             expect(navigator.contacts.create).toBeDefined();
             expect(typeof navigator.contacts.create).toBe('function');
         });
@@ -180,7 +184,9 @@ describe("Contacts (navigator.contacts)", function () {
             expect(obj.emails[0].value).toBe('here@there.com');
             expect(obj.emails[1].value).toBe('there@here.com');
             expect(obj.nickname).toBe(null);
-            expect(obj.birthday).toBe(bDay);
+            if(PLAT != "windowsphone") {
+                expect(obj.birthday).toBe(bDay);
+            }
         });
     });
 
@@ -313,8 +319,10 @@ describe("Contacts (navigator.contacts)", function () {
                     expect(obj.emails.length).toBe(2);
                     expect(obj.emails[0].value).toBe('here@there.com');
                     expect(obj.emails[1].value).toBe('there@here.com');
-                    expect(obj.birthday.toDateString()).toBe(bDay.toDateString());
-                    expect(obj.addresses).toBe(null);
+                    if(PLAT != "windowsphone") {
+	                    expect(obj.birthday.toDateString()).toBe(bDay.toDateString());
+                        expect(obj.addresses).toBe(null);
+                    }
                     // must store returned object in order to have id for update test below
                     gContactObj = obj;
                 }),
@@ -330,6 +338,7 @@ describe("Contacts (navigator.contacts)", function () {
                 expect(saveFail).not.toHaveBeenCalled();
             });
          });
+         if(PLAT != "windowsphone") {
         // HACK: there is a reliance between the previous and next test. This is bad form.
         it("contacts.spec.21 update a contact", function() {
             expect(gContactObj).toBeDefined();
@@ -341,7 +350,7 @@ describe("Contacts (navigator.contacts)", function () {
                     expect(obj).toBeDefined();
                     expect(obj.id).toBe(gContactObj.id);
                     expect(obj.note).toBe(noteText);
-                    expect(obj.birthday.toDateString()).toBe(bDay.toDateString());
+                   	expect(obj.birthday.toDateString()).toBe(bDay.toDateString());
                     expect(obj.emails.length).toBe(1);
                     expect(obj.emails[0].value).toBe('here@there.com');
                     removeContact();         // Clean up contact object
@@ -362,101 +371,104 @@ describe("Contacts (navigator.contacts)", function () {
             runs(function () {
                 expect(fail).not.toHaveBeenCalled();
             });
-        });
+         });
+         }
     });
 
-    describe('Contact.remove method', function () {
-        afterEach(removeContact);
+	if(PLAT != "windowsphone") {
+	    describe('Contact.remove method', function () {
+	        afterEach(removeContact);
 
-        it("contacts.spec.22 calling remove on a contact has an id of null should return ContactError.UNKNOWN_ERROR", function() {
-            var win = jasmine.createSpy();
-            var fail = jasmine.createSpy().andCallFake(function(result) {
-                expect(result.code).toBe(ContactError.UNKNOWN_ERROR);
-            });
+	        it("contacts.spec.22 calling remove on a contact has an id of null should return ContactError.UNKNOWN_ERROR", function() {
+	            var win = jasmine.createSpy();
+	            var fail = jasmine.createSpy().andCallFake(function(result) {
+	                expect(result.code).toBe(ContactError.UNKNOWN_ERROR);
+	            });
 
-            runs(function () {
-                var rmContact = new Contact();
-                rmContact.remove(win, fail);
-            });
+	            runs(function () {
+	                var rmContact = new Contact();
+	                rmContact.remove(win, fail);
+	            });
 
-            waitsFor(function () { return fail.wasCalled; }, Tests.TEST_TIMEOUT);
+	            waitsFor(function () { return fail.wasCalled; }, Tests.TEST_TIMEOUT);
 
-            runs(function () {
-                expect(win).not.toHaveBeenCalled();
-            });
-        });
+	            runs(function () {
+	                expect(win).not.toHaveBeenCalled();
+	            });
+	        });
 
-        it("contacts.spec.23 calling remove on a contact that does not exist should return ContactError.UNKNOWN_ERROR", function() {
-            var win = jasmine.createSpy();
-            var fail = jasmine.createSpy().andCallFake(function(result) {
-                expect(result.code).toBe(ContactError.UNKNOWN_ERROR);
-            });
+	        it("contacts.spec.23 calling remove on a contact that does not exist should return ContactError.UNKNOWN_ERROR", function() {
+	            var win = jasmine.createSpy();
+	            var fail = jasmine.createSpy().andCallFake(function(result) {
+	                expect(result.code).toBe(ContactError.UNKNOWN_ERROR);
+	            });
 
-            runs(function () {
-                var rmContact = new Contact();
-                // this is a bit risky as some devices may have contact ids that large
-                var contact = new Contact("this string is supposed to be a unique identifier that will never show up on a device");
-                contact.remove(win, fail);
-            });
+	            runs(function () {
+	                var rmContact = new Contact();
+	                // this is a bit risky as some devices may have contact ids that large
+	                var contact = new Contact("this string is supposed to be a unique identifier that will never show up on a device");
+	                contact.remove(win, fail);
+	            });
 
-            waitsFor(function () { return fail.wasCalled; }, Tests.TEST_TIMEOUT);
+	            waitsFor(function () { return fail.wasCalled; }, Tests.TEST_TIMEOUT);
 
-            runs(function () {
-                expect(win).not.toHaveBeenCalled();
-            });
-        });
-    });
+	            runs(function () {
+	                expect(win).not.toHaveBeenCalled();
+	            });
+	        });
+	    });
 
-    describe("Round trip Contact tests (creating + save + delete + find).", function () {
-        afterEach(removeContact);
+	    describe("Round trip Contact tests (creating + save + delete + find).", function () {
+	        afterEach(removeContact);
 
-        it("contacts.spec.24 Creating, saving, finding a contact should work, removing it should work, after which we should not be able to find it, and we should not be able to delete it again.", function() {
-            var done = false;
-            runs(function () {
-                gContactObj = new Contact();
-                gContactObj.name = new ContactName();
-                gContactObj.name.familyName = "DeleteMe";
-                gContactObj.save(function(c_obj) {
-                    var findWin = function(cs) {
-                        expect(cs.length).toBe(1);
-                        // update to have proper saved id
-                        gContactObj = cs[0];
-                        gContactObj.remove(function() {
-                            var findWinAgain = function(seas) {
-                                expect(seas.length).toBe(0);
-                                gContactObj.remove(function() {
-                                    throw("success callback called after non-existent Contact object called remove(). Test failed.");
-                                }, function(e) {
-                                    expect(e.code).toBe(ContactError.UNKNOWN_ERROR);
-                                    done = true;
-                                });
-                            };
-                            var findFailAgain = function(e) {
-                                throw("find error callback invoked after delete, test failed.");
-                            };
-                            var obj = new ContactFindOptions();
-                            obj.filter="DeleteMe";
-                            obj.multiple=true;
-                            navigator.contacts.find(["displayName", "name", "phoneNumbers", "emails"], findWinAgain, findFailAgain, obj);
-                        }, function(e) {
-                            throw("Newly created contact's remove function invoked error callback. Test failed.");
-                        });
-                    };
-                    var findFail = function(e) {
-                        throw("Failure callback invoked in navigator.contacts.find call, test failed.");
-                    };
-                    var obj = new ContactFindOptions();
-                    obj.filter="DeleteMe";
-                    obj.multiple=true;
-                    navigator.contacts.find(["displayName", "name", "phoneNumbers", "emails"], findWin, findFail, obj);
-                }, function(e) {
-                    throw("Contact creation failed, error callback was invoked.");
-                });
-            });
+	        it("contacts.spec.24 Creating, saving, finding a contact should work, removing it should work, after which we should not be able to find it, and we should not be able to delete it again.", function() {
+	            var done = false;
+	            runs(function () {
+	                gContactObj = new Contact();
+	                gContactObj.name = new ContactName();
+	                gContactObj.name.familyName = "DeleteMe";
+	                gContactObj.save(function(c_obj) {
+	                    var findWin = function(cs) {
+	                        expect(cs.length).toBe(1);
+	                        // update to have proper saved id
+	                        gContactObj = cs[0];
+	                        gContactObj.remove(function() {
+	                            var findWinAgain = function(seas) {
+	                                expect(seas.length).toBe(0);
+	                                gContactObj.remove(function() {
+	                                    throw("success callback called after non-existent Contact object called remove(). Test failed.");
+	                                }, function(e) {
+	                                    expect(e.code).toBe(ContactError.UNKNOWN_ERROR);
+	                                    done = true;
+	                                });
+	                            };
+	                            var findFailAgain = function(e) {
+	                                throw("find error callback invoked after delete, test failed.");
+	                            };
+	                            var obj = new ContactFindOptions();
+	                            obj.filter="DeleteMe";
+	                            obj.multiple=true;
+	                            navigator.contacts.find(["displayName", "name", "phoneNumbers", "emails"], findWinAgain, findFailAgain, obj);
+	                        }, function(e) {
+	                            throw("Newly created contact's remove function invoked error callback. Test failed.");
+	                        });
+	                    };
+	                    var findFail = function(e) {
+	                        throw("Failure callback invoked in navigator.contacts.find call, test failed.");
+	                    };
+	                    var obj = new ContactFindOptions();
+	                    obj.filter="DeleteMe";
+	                    obj.multiple=true;
+	                    navigator.contacts.find(["displayName", "name", "phoneNumbers", "emails"], findWin, findFail, obj);
+	                }, function(e) {
+	                    throw("Contact creation failed, error callback was invoked.");
+	                });
+	            });
 
-            waitsFor(function () { return done; }, Tests.TEST_TIMEOUT);
-        });
-    });
+	            waitsFor(function () { return done; }, Tests.TEST_TIMEOUT);
+	        });
+	    });
+    }
 
     describe('ContactError interface', function () {
         it("contacts.spec.25 ContactError constants should be defined", function() {
