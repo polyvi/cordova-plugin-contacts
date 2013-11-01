@@ -100,7 +100,96 @@
         }
 
     };
-    
+
+    function displayContact() {
+        document.getElementById('contacts_results').innerHTML = "";
+        var contact = navigator.contacts.create();
+        contact.displayName = "Bob Gates";
+        contact.nickname = "BG";
+        contact.note = "Good Friend";
+
+        var name = new ContactName();
+        name.givenName = "Bob";
+        name.familyName = "Gates";
+        contact.name = name;
+
+        var contactEmails = [];
+        contactEmails[0] = new ContactField('work', 'bill_gates@hotmail.com', false);
+        contact.emails = contactEmails;
+
+        var phoneNumbers = [];
+        phoneNumbers[0] = new ContactField('work', '212-555-1234', false);
+        phoneNumbers[1] = new ContactField('mobile', '917-555-5432', true);
+        phoneNumbers[2] = new ContactField('home', '203-555-7890', false);
+        contact.phoneNumbers = phoneNumbers;
+
+        var orgs = [];
+        orgs[0] = new ContactOrganization();
+        orgs[0].name = "MS";
+        orgs[0].title = "CEO";
+        contact.organizations = orgs;
+
+        contact.save(onSaveSuccess, onError);
+    }
+
+    function onSaveSuccess(contacts) {
+        contacts.display(onError,{allowsEditing:"true"});
+    }
+
+    function onError(contactError) {
+        document.getElementById('contacts_results').innerHTML = "Error: "+contactError.code;
+    }
+
+    function newContactUI() {
+        document.getElementById('contacts_results').innerHTML = "";
+        navigator.contacts.newContactUI(onSuccess);
+    }
+
+    function onSuccess(contactId) {
+       if( typeof contactId == 'number' ) {
+           document.getElementById('contacts_results').innerHTML = "success!";
+       }
+    }
+
+    function chooseContact() {
+        document.getElementById('contacts_results').innerText = "chooseContact";
+        navigator.contacts.chooseContact(win,{allowsEditing:"true",fields:["name", "phoneNumbers", "emails"]});
+    }
+
+    function chooseContactHasNoFields() {
+        document.getElementById('contacts_results').innerText = "chooseContactHasNoFields";
+        navigator.contacts.chooseContact(function(id){
+            document.getElementById('contacts_results').innerText = "success: contact id=" + id;
+        },{});
+    }
+
+    function chooseContactNoOptions() {
+        document.getElementById('contacts_results').innerText = "chooseContactNoOptions";
+        navigator.contacts.chooseContact(function(id){
+            document.getElementById('contacts_results').innerText = "success: contact id=" + id;
+        });
+    }
+
+    function win(id, results) {
+        var name = "name:";
+        var phone = "phoneNumbers:";
+        var email = "email:";
+        if(null != results.name) {
+            name +=  results.name.formatted + "\n";
+        }
+        if(null != results.phoneNumbers) {
+            for(var i = 0; i < results.phoneNumbers.length; i++) {
+                phone +=  results.phoneNumbers[i].value + "\n";
+            }
+        }
+        if(null != results.emails) {
+            for(var i = 0; i < results.emails.length; i++) {
+                email +=  results.emails[i].value + "\n";
+            }
+        }
+        document.getElementById('contacts_results').innerText = "success:" + name + phone + email;
+    }
+
     /**
      * Function called when page has finished loading.
      */
@@ -120,8 +209,8 @@
 
   </head>
   <body onload="init();" id="stage" class="theme">
-  
-    <h1>Contacts</h1>    
+
+    <h1>Contacts</h1>
     <div id="info">
         <b>Results:</b><br>
         <span id="contacts_results"> </span>
@@ -129,6 +218,11 @@
     <h2>Action</h2>
     <div class="btn large" onclick="getContacts();">Get phone's contacts</div>
     <div class="btn large" onclick="addContact();">Add a new contact 'Dooney Evans'</div>
+    <div class="btn large" data-platform="ios_android" onclick="chooseContact();">chooseContact</div>
+    <div class="btn large" data-platform="ios_android" onclick="chooseContactHasNoFields();">chooseContactHasNoFields</div>
+    <div class="btn large" data-platform="ios_android" onclick="chooseContactNoOptions();">chooseContactNoOptions</div>
+    <div class="btn large" data-platform="ios" onclick="displayContact();">display Contact</div>
+    <div class="btn large" data-platform="ios" onclick="newContactUI();">open an newContactUI</div>
     <h2> </h2><div class="backBtn" onclick="backHome();">Back</div>
   </body>
-</html>      
+</html>
