@@ -195,7 +195,7 @@
 - (void)chooseContact:(CDVInvokedUrlCommand*)command
 {
     NSString* callbackId = command.callbackId;
-    NSDictionary* options = [command.arguments objectAtIndex:0 withDefault:[NSNull null]];
+    NSDictionary* options = [command.arguments objectAtIndex:0 withDefault:nil];
 
     ABPeoplePickerNavigationController* pickerController = [[ABPeoplePickerNavigationController alloc] init];
     _picker = [[CDVContactsPicker alloc] init];
