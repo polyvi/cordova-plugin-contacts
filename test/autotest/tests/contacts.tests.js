@@ -184,7 +184,7 @@ describe("Contacts (navigator.contacts)", function () {
             expect(obj.emails[0].value).toBe('here@there.com');
             expect(obj.emails[1].value).toBe('there@here.com');
             expect(obj.nickname).toBe(null);
-            if(PLAT != "windowsphone") {
+            if (PLAT != "WindowsPhone") {
                 expect(obj.birthday).toBe(bDay);
             }
         });
@@ -319,7 +319,7 @@ describe("Contacts (navigator.contacts)", function () {
                     expect(obj.emails.length).toBe(2);
                     expect(obj.emails[0].value).toBe('here@there.com');
                     expect(obj.emails[1].value).toBe('there@here.com');
-                    if(PLAT != "windowsphone") {
+                    if (PLAT != "WindowsPhone") {
 	                    expect(obj.birthday.toDateString()).toBe(bDay.toDateString());
                         expect(obj.addresses).toBe(null);
                     }
@@ -338,7 +338,7 @@ describe("Contacts (navigator.contacts)", function () {
                 expect(saveFail).not.toHaveBeenCalled();
             });
          });
-         if(PLAT != "windowsphone") {
+        if (PLAT != "WindowsPhone") {
         // HACK: there is a reliance between the previous and next test. This is bad form.
         it("contacts.spec.21 update a contact", function() {
             expect(gContactObj).toBeDefined();
@@ -375,7 +375,7 @@ describe("Contacts (navigator.contacts)", function () {
          }
     });
 
-	if(PLAT != "windowsphone") {
+    if (PLAT != "WindowsPhone") {
 	    describe('Contact.remove method', function () {
 	        afterEach(removeContact);
 
