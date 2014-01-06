@@ -4,7 +4,7 @@
     xmlns:rim="http://www.blackberry.com/ns/widgets"
     xmlns:android="http://schemas.android.com/apk/res/android"
     id="org.apache.cordova.contacts"
-    version="0.2.6-dev">
+    version="0.2.7">
 
     <name>Contacts</name>
     <description>Cordova Contacts Plugin</description>
@@ -86,6 +86,17 @@
         <source-file src="src/android/ContactManager.java" target-dir="src/org/apache/cordova/contacts" />
     </platform>
     
+    <!-- ubuntu -->
+    <platform name="ubuntu">
+        <config-file target="config.xml" parent="/*">
+            <feature name="Contacts">
+                <param policy_group="contacts" policy_version="1" />
+            </feature>
+        </config-file>
+        <header-file src="src/ubuntu/contacts.h" />
+        <source-file src="src/ubuntu/contacts.cpp" />
+    </platform>
+
     <!-- ios -->
     <platform name="ios">
         <config-file target="config.xml" parent="/*">
