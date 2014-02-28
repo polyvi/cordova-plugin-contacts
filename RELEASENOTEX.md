@@ -49,3 +49,32 @@
  *  CB-3035 Fix issue with windows new line char \n\r
  *  batch modify .reviewboard
  *  #2[android][fix bug]delete unsupported tests in android
+
+
+## 0.2.8 (Fri Feb 28 2014)
+
+
+ *  CB-5980 Updated version and RELEASENOTES.md for release 0.2.8
+ *  [CB-3208] FFOS docs updated
+ *  CB-4590 - chooseContact in CDVContacts crashes app
+ *  Delete stale test/ directory
+ *  CB-5719 Incremented plugin version on dev branch.
+ *  * FirefoxOS quirks updated * name.formatted constructed with respect to honorific pre- and suffix
+ *  added readOnly formatted field
+ *  explanation about organizations added
+ *  added organizations and categories
+ *  addresses added to the Proxy
+ *  refactoring * update from Mozilla moved to Contact prototype * some comments added/modified
+ *  search if contact does exist before remove
+ *  check for id in the right way
+ *  fixed update contacts (if id is provided one needs to search for the contact) updateFromCordova moved to prototype of mozContact fields are fixed the right search is used
+ *  wrong example given
+ *  docs added
+ *  FxOS name fields are arrays hackedSearch refactored search based on find commented out
+ *  search added - no idea if this is working
+ *  search hacked via getAll
+ *  createMozillaFromCordova and vice versa are used to translate contact objects from one API to another.
+ *  add/remove working
+ *  save is working
+ *  attempt to save is failing trying to limit the translated contact fields to name and familyName, but still failing
+ *  save is linked with the proxy contact.name doesn't exist www/Contact.js#Contact.prototype.save check on which side is the error
