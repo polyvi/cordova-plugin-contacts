@@ -24,12 +24,22 @@ import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.polyvi.xface.util.XLog;
+import com.polyvi.xface.util.XNotification;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.ContactsContract;
 import android.util.Log;
 
 public class ContactManager extends CordovaPlugin {
 
     private ContactAccessor contactAccessor;
     private static final String LOG_TAG = "Contact Query";
+    private static final int PICK_CONTACT = 1;
 
     public static final int UNKNOWN_ERROR = 0;
     public static final int INVALID_ARGUMENT_ERROR = 1;
@@ -44,6 +54,7 @@ public class ContactManager extends CordovaPlugin {
      */
     public ContactManager() {
     }
+    private CallbackContext mCallbackContext;
 
     /**
      * Executes the request and returns PluginResult.
@@ -70,6 +81,7 @@ public class ContactManager extends CordovaPlugin {
         if (this.contactAccessor == null) {
             this.contactAccessor = new ContactAccessorSdk5(this.cordova);
         }
+        mCallbackContext = callbackContext;
 
         if (action.equals("search")) {
             final JSONArray filter = args.getJSONArray(0);
@@ -114,9 +126,43 @@ public class ContactManager extends CordovaPlugin {
                 }
             });
         }
+        else if (action.equals("chooseContact")) {
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setType(ContactsContract.Contacts.CONTENT_TYPE);
+            this.cordova.startActivityForResult((CordovaPlugin) this, intent, PICK_CONTACT);
+        }
         else {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == PICK_CONTACT) {
+                handleResult(intent);
+            }
+        }
+    }
+
+    /**
+     * Handle activity result
+     * @param intent
+     */
+    private void handleResult(Intent intent) {
+        Uri contactData = intent.getData();
+        Cursor cursor = cordova.getActivity().getContentResolver().query(contactData, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            String contactID = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+            JSONObject result = null;
+            try {
+                result = this.contactAccessor.getContactById(contactID);
+                mCallbackContext.success(result);
+            } catch (JSONException e) {
+                XLog.e("ContactManager", "handleResult failed");
+                new XNotification(cordova).toast("Choose Contact Failed");
+            }
+        }
     }
 }
