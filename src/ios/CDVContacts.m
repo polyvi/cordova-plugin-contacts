@@ -239,6 +239,7 @@
         // Retrieve and return pickedContact information
         CDVContact* pickedContact = [[CDVContact alloc] initFromABRecord:(ABRecordRef)person];
         NSArray* fields = [picker.options objectForKey:@"fields"];
+        fields = fields == nil ? @[@"*"] : fields;
         NSDictionary* returnFields = [[CDVContact class] calcReturnFields:fields];
         picker.pickedContactDictionary = [pickedContact toDictionary:returnFields];
 
