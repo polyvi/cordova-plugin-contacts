@@ -78,3 +78,11 @@
  *  save is working
  *  attempt to save is failing trying to limit the translated contact fields to name and familyName, but still failing
  *  save is linked with the proxy contact.name doesn't exist www/Contact.js#Contact.prototype.save check on which side is the error
+
+
+## 0.2.9 (Wed Mar 19 2014)
+
+
+ *  [iOS] Fixed the problem that failed to retrieve contact's phone number.
+ *  [Android]Add choose contact function
+ *  Incremented plugin version on dev branch to 0.2.9-dev
