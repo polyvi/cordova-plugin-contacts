@@ -174,8 +174,9 @@
         var name = "name:";
         var phone = "phoneNumbers:";
         var email = "email:";
-        if(null != results.name) {
-            name +=  results.name.formatted + "\n";
+        var displayName = results.displayName ? results.displayName : results.name.formatted;
+        if(null != displayName) {
+            name += displayName + "\n";
         }
         if(null != results.phoneNumbers) {
             for(var i = 0; i < results.phoneNumbers.length; i++) {
