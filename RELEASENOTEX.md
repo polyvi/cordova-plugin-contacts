@@ -86,3 +86,10 @@
  *  [iOS] Fixed the problem that failed to retrieve contact's phone number.
  *  [Android]Add choose contact function
  *  Incremented plugin version on dev branch to 0.2.9-dev
+
+
+## 0.2.10 (Thu Apr 03 2014)
+
+
+ *  issue 1 contacts-->chooseContact: displayed name is descending. Solution:modify test page
+ *  Incremented plugin version on dev branch to 0.2.10-dev
