@@ -52,7 +52,8 @@
                     s = "Number of contacts: "+contacts.length+"<br><table width='100%'><tr><th>Name</th><td>Phone</td><td>Email</td></tr>";
                     for (var i=0; i<contacts.length; i++) {
                         var contact = contacts[i];
-                        s = s + "<tr><td>" + contact.name.formatted + "</td><td>";
+                        var displayName = contact.displayName ? contact.displayName : contact.name.formatted;
+                        s = s + "<tr><td>" + displayName + "</td><td>";
                         if (contact.phoneNumbers && contact.phoneNumbers.length > 0) {
                             s = s + contact.phoneNumbers[0].value;
                         }
