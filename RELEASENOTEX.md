@@ -93,3 +93,29 @@
 
  *  issue 1 contacts-->chooseContact: displayed name is descending. Solution:modify test page
  *  Incremented plugin version on dev branch to 0.2.10-dev
+
+
+## 0.2.11 (Tue Apr 29 2014)
+
+
+ *  CB-6452 Updated version and RELEASENOTES.md for release 0.2.10
+ *  CB-6460: Update license headers
+ *  Windows 8 - added some more #Quirks info
+ *  Update docs with Windows 8 support info, fix contacts.find example error
+ *  CB-1291 Windows8 supports multiple, added some error checking, converts Windows8 Contact to Cordova Contact
+ *  CB-1291 Windows8 added some contact conversion, console.error on save because it is not supported
+ *  CB-1291 Windows8 Adding contact picker apis
+ *  CB-6126 [BlackBerry10] Update docs quirks section for fields which are supported
+ *  CB-6212 iOS: fix warnings compiled under arm64 64-bit
+ *  CB-6212 iOS: fix warnings compiled under arm64 64-bit
+ *  manually merging CB-3208
+ *  Add NOTICE file
+ *  Add NOTICE file
+ *  CB-6114 Incremented plugin version on dev branch.
+ *  CB-6114 Updated version and RELEASENOTES.md for release 0.2.9
+ *  CB-6086 Fix typo in ffos part of plugin.xml: Camera -> Contacts
+ *  CB-5980 Incremented plugin version on dev branch.
+ *  CB-5980 Updated version and RELEASENOTES.md for release 0.2.8
+ *  CB-5994 Switch Contact ID lookup to use Raw contact id.
+ *  issue 4 contacts->get phone's contacts: full name didn't display right in test page.Bug reason: contact.displayName isn't used. Solution: Use contact.displayName in test page
+ *  Incremented plugin version on dev branch to 0.2.11-dev
