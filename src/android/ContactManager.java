@@ -25,8 +25,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.polyvi.xface.util.XLog;
-import com.polyvi.xface.util.XNotification;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -34,6 +32,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.widget.Toast;
 
 public class ContactManager extends CordovaPlugin {
 
@@ -160,8 +159,8 @@ public class ContactManager extends CordovaPlugin {
                 result = this.contactAccessor.getContactById(contactID);
                 mCallbackContext.success(result);
             } catch (JSONException e) {
-                XLog.e("ContactManager", "handleResult failed");
-                new XNotification(cordova).toast("Choose Contact Failed");
+                Log.e("ContactManager", "handleResult failed");
+                Toast.makeText(cordova.getActivity(), "Choose Contact Failed", Toast.LENGTH_SHORT).show();
             }
         }
     }
